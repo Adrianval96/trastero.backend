@@ -63,21 +63,24 @@ WSGI_APPLICATION = 'trastero.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'HOST': '10.126.208.3',
-#         'PORT': '5432',
-#         'NAME': 'postgres',
-#     }
-# }
+ENVIRONMENT = os.environ.get('DJANGO_ENV', 'development')
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "trastero.db",
+if ENVIRONMENT == 'production':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '10.126.208.3',
+            'PORT': '5432',
+            'NAME': 'postgres',
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": "trastero.local.db",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
