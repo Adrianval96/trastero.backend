@@ -38,7 +38,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'trastero.urls'
+ROOT_URLCONF = 'trastero.trastero.urls'
 
 TEMPLATES = [
     {
