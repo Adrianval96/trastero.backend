@@ -62,12 +62,19 @@ WSGI_APPLICATION = 'trastero.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST': '10.126.208.3',
+#         'PORT': '5432',
+#         'NAME': 'postgres',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': '10.126.208.3',
-        'PORT': '5432',
-        'NAME': 'postgres',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "trastero.db",
     }
 }
 
