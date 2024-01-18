@@ -1,2 +1,2 @@
 runtime: python312
-entrypoint: gunicorn --chdir src -b :$PORT app:app
+entrypoint: gunicorn --chdir src -b :$PORT trastero:src.wsgi
