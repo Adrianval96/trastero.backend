@@ -67,7 +67,7 @@ WSGI_APPLICATION = 'trastero.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': '10.126.208.3',
+        'HOST': '35.240.85.77',
         'PORT': '5432',
         'NAME': 'postgres',
     }
