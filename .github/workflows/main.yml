@@ -14,6 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up SA Credentials
+        run: |
+          echo "${{ secrets.GCLOUD_SERVICE_ACCOUNT_CREDENTIALS }}" >> gcloud_credentials.json
+
       # - name: Set up env file
       #   run: |
       #     echo YOUR_API_KEY=${{ secrets.GITHUB_API_KEY }} >> .env

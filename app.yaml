@@ -1,2 +1,5 @@
 runtime: python312
 entrypoint: gunicorn --chdir src -b :$PORT trastero:src.wsgi
+
+env_variables:
+  GCLOUD_CREDENTIALS_PATH=gcloud_credentials.json
