@@ -16,7 +16,7 @@ jobs:
 
       - name: Set up SA Credentials
         run: |
-          echo "${{ secrets.GCLOUD_SERVICE_ACCOUNT_CREDENTIALS }}" >> gcloud_credentials.json
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> gcloud_credentials.json
 
       # - name: Set up env file
       #   run: |
@@ -26,7 +26,7 @@ jobs:
       - id: auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_CREDENTIALS }}
+          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
