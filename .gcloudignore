@@ -1,0 +1,12 @@
+.env
+
+.git
+.gitignore
+.gcloudignore
+
+__pycache__/
+
+/setup.cfg
+venv/
+
+.idea/
