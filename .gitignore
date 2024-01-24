@@ -1,5 +1,7 @@
 .venv
 .env
 
+cloud-sql-proxy
+
 __pycache__/
 .idea/
