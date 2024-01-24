@@ -45,7 +45,9 @@ jobs:
           pip install -r requirements/base.txt
 
       - name: Apply migrations
-        run: python manage.py migrate
+        run: |
+          cd src
+          python manage.py migrate
 
       - name: Deploy to App Engine
         run: |
