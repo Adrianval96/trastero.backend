@@ -1,3 +1,7 @@
+from django.urls import path
 
+from products.views import RetrieveProductsView
 
-urlpatterns = []
+urlpatterns = [
+    path('', RetrieveProductsView.as_view()),
+]
