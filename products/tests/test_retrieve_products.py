@@ -6,7 +6,7 @@ class TestRetrieveProducts:
 
     def test_foo(self, client):
 
-        response = client.get('/products/')
+        response = client.get('/api/products/')
 
         assert response.status_code == 200
         assert response.json() == [
