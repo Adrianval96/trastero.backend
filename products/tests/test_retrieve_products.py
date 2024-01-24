@@ -6,4 +6,14 @@ class TestRetrieveProducts:
 
     def test_foo(self, client):
 
-        assert client.get('/products/').status_code == 200
+        response = client.get('/products/')
+
+        assert response.status_code == 200
+        assert response.json() == [
+            {
+                'id': 1,
+                'name': 'Opel Corsa',
+                'description': 'Vendo opel corsa',
+                'price': 5.00
+            }
+        ]
