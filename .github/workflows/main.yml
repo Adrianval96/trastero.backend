@@ -18,10 +18,11 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" >> gcloud_credentials.json
 
-      # - name: Set up env file
-      #   run: |
-      #     echo YOUR_API_KEY=${{ secrets.GITHUB_API_KEY }} >> .env
-      #     cat .env
+      - name: Set up env file
+        run: |
+          echo DB_USER=${{ secrets.DB_USER }} >> .env
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+          cat .env
 
       - id: auth
         uses: google-github-actions/auth@v2
