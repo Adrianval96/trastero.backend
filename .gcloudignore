@@ -11,4 +11,6 @@ venv/
 
 .idea/
 
+.tmp
+
 cloud-sql-proxy
