@@ -1,4 +1,12 @@
 runtime: python312
+
+# Add Cloud SQL Proxy handler
+handlers:
+- url: /cloudsql
+  script: auto
+
 entrypoint: gunicorn -b :$PORT trastero.wsgi
+beta_settings:
+  cloud_sql_instances: trastero-postgres
 env_variables:
   DJANGO_ENV: 'production'

@@ -31,6 +31,12 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Set up CloudSQL proxy
+        uses: mattes/gce-cloudsql-proxy-action@v1
+        with:
+          creds: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          instance: el-trastero-de-adri:europe-west1:trastero-postgres
+
       #- name: Install dependencies
       #  run: |
       #    python -m pip install --upgrade pip
