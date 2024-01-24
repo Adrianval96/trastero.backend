@@ -20,6 +20,7 @@ jobs:
 
       - name: Set up env file
         run: |
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
           echo DB_USER=${{ secrets.DB_USER }} >> .env
           echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
           cat .env
@@ -36,7 +37,7 @@ jobs:
         uses: mattes/gce-cloudsql-proxy-action@v1
         with:
           creds: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          instance: el-trastero-de-adri:europe-west1:trastero-postgres
+          instance: ${{ secrets.GOOGLE_DATABASE_INSTANCE }}
 
       - name: Install dependencies
         run: |
