@@ -7,4 +7,4 @@ class Product(models.Model):
     price = models.FloatField()
 
     class Meta:
-        db_table = 'products'
+        db_table = "products"
