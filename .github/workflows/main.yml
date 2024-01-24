@@ -47,6 +47,9 @@ jobs:
       - name: Apply migrations
         run: python manage.py migrate
 
+      - name: Collect static files
+        run: python manage.py collectstatic --noinput
+
       - name: Deploy to App Engine
         run: |
           gcloud app deploy
