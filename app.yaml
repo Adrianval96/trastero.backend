@@ -10,7 +10,7 @@ beta_settings:
   cloud_sql_instances: trastero-postgres
 env_variables:
   DJANGO_ENV: 'production'
-  DB_HOST: ${{ secrets.DB_PUBLIC_HOST }}
-  DB_NAME: ${{ secrets.DB_NAME }}
-  DB_USER: ${{ secrets.DB_USER }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_HOST: 35.240.85.77
+  DB_NAME: $DB_NAME
+  DB_USER: $DB_USER
+  DB_PASSWORD: $DB_PASSWORD
