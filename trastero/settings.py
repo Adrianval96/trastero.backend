@@ -5,14 +5,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DJANGO_ENV = os.getenv("DJANGO_ENV")
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
 
-DEBUG = DJANGO_ENV == "local"
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ew.r.appspot.com"]
 
