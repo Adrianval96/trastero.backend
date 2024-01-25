@@ -3,5 +3,7 @@
 
 cloud-sql-proxy
 
+.tmp
+
 __pycache__/
 .idea/
