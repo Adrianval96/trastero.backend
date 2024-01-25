@@ -7,10 +7,10 @@ handlers:
 
 entrypoint: gunicorn -b :$PORT trastero.wsgi
 beta_settings:
-  cloud_sql_instances: trastero-postgres
+  cloud_sql_instances: el-trastero-de-adri:europe-west1:trastero-postgres
 env_variables:
   DJANGO_ENV: 'production'
-  DB_HOST: 35.240.85.77
+  DB_HOST: $DB_PUBLIC_HOST
   DB_NAME: $DB_NAME
   DB_USER: $DB_USER
   DB_PASSWORD: $DB_PASSWORD
