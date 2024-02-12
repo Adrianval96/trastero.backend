@@ -7,3 +7,5 @@ cloud-sql-proxy
 
 __pycache__/
 .idea/
+
+*creds.json
