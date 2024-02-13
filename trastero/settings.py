@@ -1,16 +1,47 @@
+import io
+
+import environ
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+import google.auth
+from google.auth.exceptions import DefaultCredentialsError
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+env_file = os.path.join(BASE_DIR, ".env")
 
-DEBUG = True
+try:
+    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+except DefaultCredentialsError:
+    pass
+
+if os.path.isfile(env_file):
+    env.read_env(env_file)
+
+elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+    # Pull secrets from Secret Manager
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+    client = secretmanager.SecretManagerServiceClient()
+    name = f"projects/{project_id}/secrets/django_settings/versions/latest"
+    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+
+    env.read_env(io.StringIO(payload))
+
+else:
+    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+
+
+DEBUG = os.getenv('DEBUG')
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ew.r.appspot.com", ".a.run.app"]
 
@@ -64,17 +95,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "trastero.wsgi.application"
 
+DATABASES = {'default': env.db()}
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("DB_HOST", "127.0.0.1"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-        "NAME": os.getenv("DB_NAME", "postgres"),
-        "USER": os.getenv("DB_USER", ""),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
-    }
-}
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+    DATABASES["default"]["PORT"] = 5432
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

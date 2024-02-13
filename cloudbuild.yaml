@@ -42,7 +42,6 @@ steps:
         "--no-input",
       ]
 
-  # Deploy the Docker image to Cloud Run
   - id: 'Deploy to Cloud Run'
     name: 'gcr.io/cloud-builders/gcloud'
     args:
