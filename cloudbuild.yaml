@@ -16,7 +16,8 @@ steps:
       - '--image=gcr.io/$PROJECT_ID/trastero-backend'
       - '--platform=managed'
       - '--region=europe-west1'
-      - '--allow-unauthenticated'  # Optional: Allow unauthenticated access
+      - '--add-cloudsql-instances=el-trastero-de-adri:europe-west1:trastero-postgres'
+      - '--allow-unauthenticated'
 
 images:
   - 'gcr.io/$PROJECT_ID/trastero-backend'
