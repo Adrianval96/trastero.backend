@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ew.r.appspot.com", ".ew.a.run.app"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ew.r.appspot.com", "-ew.a.run.app"]
 
 
 # Application definition
