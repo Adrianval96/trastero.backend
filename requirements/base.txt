@@ -1,7 +1,10 @@
 python-dotenv
-django
+django==5.0.2
 djangorestframework
 django-extensions
+django-environ==0.10.0
+django-storages[google]==1.13.2
 gunicorn==21.2.0
-psycopg2-binary
+psycopg2-binary==2.9.9
+google-cloud-secret-manager==2.16.1
 whitenoise
