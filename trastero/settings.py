@@ -22,20 +22,20 @@ _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
 if os.path.isfile(env_file):
     env.read_env(env_file)
 
-project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
+if not os.environ.get("USE_EPHEMERAL_DATABASE"):
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 
-if not project_id:
-    raise Exception("Project ID was not loaded correctly. Check service account credentials.")
+    if not project_id:
+        raise Exception("Project ID was not loaded correctly. Check service account credentials.")
 
+    # Get Django settings for a Cloud Run deployment
+    if os.environ.get("GCLOUD_DEPLOYMENT"):
+        client = secretmanager.SecretManagerServiceClient()
+        secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
+        secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
 
-# Get Django settings for a Cloud Run deployment
-if os.environ.get("GCLOUD_DEPLOYMENT"):
-    client = secretmanager.SecretManagerServiceClient()
-    secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
-    secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
-
-    # Save to env variables
-    env.read_env(io.StringIO(secret_data))
+        # Save to env variables
+        env.read_env(io.StringIO(secret_data))
 
 
 DEBUG = os.getenv('DEBUG')
