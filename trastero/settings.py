@@ -17,12 +17,12 @@ env = environ.Env(
 )
 env_file = os.path.join(BASE_DIR, ".env")
 
-_, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-
 if os.path.isfile(env_file):
     env.read_env(env_file)
 
 if not os.environ.get("USE_EPHEMERAL_DATABASE"):
+    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 
     if not project_id:
