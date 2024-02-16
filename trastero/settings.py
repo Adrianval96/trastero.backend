@@ -5,7 +5,6 @@ import os
 from pathlib import Path
 
 import google.auth
-from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,25 +17,24 @@ env = environ.Env(
 )
 env_file = os.path.join(BASE_DIR, ".env")
 
-try:
-    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except DefaultCredentialsError:
-    pass
+_, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
 
 if os.path.isfile(env_file):
     env.read_env(env_file)
 
-elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
 
+if not project_id:
+    raise Exception("Project ID was not loaded correctly. Check service account credentials.")
+
+
+# Get Django settings for a Cloud Run deployment
+if os.environ.get("GCLOUD_DEPLOYMENT"):
     client = secretmanager.SecretManagerServiceClient()
-    name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+    secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
+    secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
 
-    env.read_env(io.StringIO(payload))
-
-else:
-    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+    env.read_env(io.StringIO(secret_data))
 
 
 DEBUG = os.getenv('DEBUG')
