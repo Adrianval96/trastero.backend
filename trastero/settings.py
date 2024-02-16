@@ -1,16 +1,46 @@
+import io
+
+import environ
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+import google.auth
+from google.cloud import secretmanager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
+DJANGO_SETTINGS_SECRET_NAME = 'django-settings'
 
-DEBUG = True
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+env_file = os.path.join(BASE_DIR, ".env")
+
+if os.path.isfile(env_file):
+    env.read_env(env_file)
+
+if not os.environ.get("USE_EPHEMERAL_DATABASE"):
+    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
+
+    if not project_id:
+        raise Exception("Project ID was not loaded correctly. Check service account credentials.")
+
+    # Get Django settings for a Cloud Run deployment
+    if os.environ.get("GCLOUD_DEPLOYMENT"):
+        client = secretmanager.SecretManagerServiceClient()
+        secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
+        secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
+
+        # Save to env variables
+        env.read_env(io.StringIO(secret_data))
+
+
+DEBUG = os.getenv('DEBUG')
+
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure_key")
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", ".ew.r.appspot.com", ".a.run.app"]
 
@@ -64,17 +94,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "trastero.wsgi.application"
 
+DATABASES = {'default': env.db()}
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("DB_HOST", "127.0.0.1"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-        "NAME": os.getenv("DB_NAME", "postgres"),
-        "USER": os.getenv("DB_USER", ""),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
-    }
-}
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+    DATABASES["default"]["PORT"] = 5432
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
