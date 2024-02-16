@@ -11,8 +11,9 @@ from google.cloud import secretmanager
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DJANGO_SETTINGS_SECRET_NAME = 'django-settings'
+
 env = environ.Env(
-    # set casting, default value
     DEBUG=(bool, False)
 )
 env_file = os.path.join(BASE_DIR, ".env")
@@ -26,11 +27,10 @@ if os.path.isfile(env_file):
     env.read_env(env_file)
 
 elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    # Pull secrets from Secret Manager
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
     client = secretmanager.SecretManagerServiceClient()
-    name = f"projects/{project_id}/secrets/django_settings/versions/latest"
+    name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
     env.read_env(io.StringIO(payload))
