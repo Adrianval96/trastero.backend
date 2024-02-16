@@ -34,6 +34,7 @@ if os.environ.get("GCLOUD_DEPLOYMENT"):
     secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
     secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
 
+    # Save to env variables
     env.read_env(io.StringIO(secret_data))
 
 
