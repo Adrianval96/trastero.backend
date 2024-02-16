@@ -10,7 +10,7 @@ from google.cloud import secretmanager
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DJANGO_SETTINGS_SECRET_NAME = 'django-settings'
+DJANGO_SETTINGS_SECRET_NAME = 'django_settings'
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -20,7 +20,7 @@ env_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(env_file):
     env.read_env(env_file)
 
-if not os.environ.get("USE_EPHEMERAL_DATABASE"):
+else:
     _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
 
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", None)
@@ -29,13 +29,12 @@ if not os.environ.get("USE_EPHEMERAL_DATABASE"):
         raise Exception("Project ID was not loaded correctly. Check service account credentials.")
 
     # Get Django settings for a Cloud Run deployment
-    if os.environ.get("GCLOUD_DEPLOYMENT"):
-        client = secretmanager.SecretManagerServiceClient()
-        secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
-        secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
+    client = secretmanager.SecretManagerServiceClient()
+    secret_name = f"projects/{project_id}/secrets/{DJANGO_SETTINGS_SECRET_NAME}/versions/latest"
+    secret_data = client.access_secret_version(name=secret_name).payload.data.decode("UTF-8")
 
-        # Save to env variables
-        env.read_env(io.StringIO(secret_data))
+    # Save to env variables
+    env.read_env(io.StringIO(secret_data))
 
 
 DEBUG = os.getenv('DEBUG')
